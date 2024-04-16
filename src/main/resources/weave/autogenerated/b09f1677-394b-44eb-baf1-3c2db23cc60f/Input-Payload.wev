@@ -1,0 +1,17 @@
+%dw 2.0
+
+type auto_b09f1677_394b_44eb_baf1_3c2db23cc60f_Input_Payload = {
+  firstName: String, 
+  lastName: String, 
+  phoneNumber: String, 
+  address: {
+    zipCode: String, 
+    country: String, 
+    city: String, 
+    address1: String, 
+    _?: Any
+  }, 
+  email: String, 
+  _?: Any
+}
+

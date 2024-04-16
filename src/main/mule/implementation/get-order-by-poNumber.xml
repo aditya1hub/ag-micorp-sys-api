@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="get-order-by-poNumber-sub-flow" doc:id="54bf7726-98d5-4ce2-b331-8e6ecd86924d" >
+		<json-logger:logger doc:name="INFO: START" doc:id="0851e9fc-9814-40a0-89c3-981a444d17a2" config-ref="json-logger-config-display-content" message="Start of get order by poNumber sub flow"/>
+		<ee:transform doc:name="vars: poNumber">
+            <ee:variables>
+                <ee:set-variable variableName="poNumber">attributes.uriParams.'poNumber'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <salesforce:query doc:name="Get Order" doc:id="c84a700c-e2bc-4eeb-b764-91362d053b0d" config-ref="salesforce-config">
+			<salesforce:salesforce-query ><![CDATA[select poNumber__c, signatureRequiredFlag__c, shipInstructions__c, giftWrapFlag__c, giftWrapMessage__c, currencyCode__c, subTotal__c, customerId__c from Orders__c where poNumber__c= :poNumber]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[{
+	poNumber: vars.poNumber
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Set Response">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  customerId: payload[0].customerId__c,
+  poNumber: payload[0].poNumber__c,
+  signatureRequiredFlag: payload[0].signatureRequiredFlag__c,
+  shipInstructions: payload[0].shipInstructions__c,
+  giftWrapFlag: payload[0].giftWrapFlag__c,
+  giftWrapMessage: payload[0].giftWrapMessage__c,
+  currencyCode: payload[0].currencyCode__c,
+  subTotal: payload[0].subTotal__c
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="INFO: END" doc:id="6c6fb26c-4a98-4e93-88d1-4522eadc511f" config-ref="json-logger-config-display-content" message="End of get order by poNumber sub flow" tracePoint="END"/>
+        
+</sub-flow>
+</mule>

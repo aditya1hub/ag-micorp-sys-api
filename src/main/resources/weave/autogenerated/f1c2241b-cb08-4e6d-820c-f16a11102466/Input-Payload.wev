@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_f1c2241b_cb08_4e6d_820c_f16a11102466_Input_Payload = Array<{  quantity: Number,   size: String,   orderId: String,   id: String,   category: String,   _?: Any}>
+

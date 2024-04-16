@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:error-handler-plugin="http://www.mulesoft.org/schema/mule/error-handler-plugin" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/error-handler-plugin http://www.mulesoft.org/schema/mule/error-handler-plugin/current/mule-error-handler-plugin.xsd">
+    <http:listener-config name="ag-micorp-sys-api-http-listener-config">
+        <http:listener-connection host="${http.host}" port="${http.port}" connectionIdleTimeout="${http.connectionIdleTimeout}">
+			<reconnection >
+				<reconnect frequency="${http.reconnection.frequency}" count="${http.reconnection.attempts}"/>
+			</reconnection>
+		</http:listener-connection>
+    </http:listener-config>
+     <apikit:config name="ag-micorp-sys-api-config" api="resource::ce235d46-115c-497c-b0e2-474afd80f5e9:ag-micorp-sys-api:1.0.1:raml:zip:ag-micorp-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <salesforce:sfdc-config name="salesforce-config" doc:name="Salesforce Config" doc:id="a7bf3f3c-1dd4-4a3e-9690-2ebafb3dc1a9">
+        <salesforce:basic-connection username="${secure::salesforce.username}" password="${secure::salesforce.password}" securityToken="${secure::salesforce.securitytoken}" >
+			<reconnection >
+				<reconnect count="5" />
+			</reconnection>
+		</salesforce:basic-connection>
+    </salesforce:sfdc-config>   
+	<configuration-properties doc:name="Configuration properties" doc:id="7d0eae1b-dadc-4c21-bb6c-ba4babb9afc4" file="properties\config-${mule.env}.yaml" />
+	<secure-properties:config name="secure-properties-config" doc:name="Secure Properties Config" doc:id="7b655b13-8332-4c0c-9763-ab3597b16274" file="properties\secure\config-${mule.env}-secure.yaml" key="${mule.key}" doc:description="Contains secure properties of micorp-sys-api">
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="false" doc:name="API Autodiscovery" doc:id="a53f153c-1c3c-4bd1-bb5b-f99ed2ab9058" flowRef="ag-micorp-sys-api-main" />
+	<configuration doc:name="Configuration" doc:id="92c6ad0a-22c3-4aa7-905d-e3aa74b0d004" defaultErrorHandler-ref="global-error-handler" doc:description="Configuration for error handler "/>
+	<json-logger:config name="json-logger-config" doc:name="JSON Logger Config" doc:id="41eacd18-4edc-4932-9fb6-649896f58d9a" environment="${mule.env}" disabledFields="${json.logger.application.disabledFields}" doc:description="Does not log the content/payload at this point" contentFieldsDataMasking="${json.logger.application.maskedFields}"/>
+	<json-logger:config name="json-logger-config-display-content" doc:name="JSON Logger Config" doc:id="cb0eee2e-3713-45d6-8e7d-0de6de1caf2b" environment="${mule.env}" doc:description="Logs the content/payload at this point" disabledFields="${json.logger.application.disabledFields}" contentFieldsDataMasking="${json.logger.application.maskedFields}"/>
+	<error-handler-plugin:config name="error-handler-plugin-config" doc:name="Error Handler Plugin Config" doc:id="f5971157-2f99-46d7-a948-8ea1c1b66022" />
+</mule>

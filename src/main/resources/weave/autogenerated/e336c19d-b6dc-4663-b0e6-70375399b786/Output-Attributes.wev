@@ -1,0 +1,27 @@
+%dw 2.0
+
+type auto_e336c19d_b6dc_4663_b0e6_70375399b786_Output_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|
+    "x-correlation-id"?: String, 
+    client_id: String, 
+    client_secret: String
+  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {| email: String |}, 
+  version: String, 
+  localAddress: String
+|}
+

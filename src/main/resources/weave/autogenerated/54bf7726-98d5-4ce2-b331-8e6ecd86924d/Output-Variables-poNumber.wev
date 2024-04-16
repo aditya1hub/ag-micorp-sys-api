@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_54bf7726_98d5_4ce2_b331_8e6ecd86924d_Output_Variables_poNumber = Any
+

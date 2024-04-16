@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="post-items-sub-flow" doc:id="f1c2241b-cb08-4e6d-820c-f16a11102466" >
+		<json-logger:logger doc:name="INFO: START" doc:id="905429b1-5af2-40c9-bc4f-4b35fe7a33e9" config-ref="json-logger-config-display-content" message="Start of post items sub flow"/>
+		<ee:transform doc:name="Set Payload" doc:id="ae6ff448-84b5-4d65-a4c2-c4c90fb8f54f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map ( payload01 , index ) -> {
+	Name: payload01.category,
+	orderId__c: payload01.orderId,
+	id__c: payload01.id,
+	category__c: payload01.category,
+	quantity__c: payload01.quantity,
+	size__c: payload01.size
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="items" doc:id="60dc16fa-fe27-4774-9b64-b87dbb96daf0" config-ref="salesforce-config" type="Items__c"/>
+		<ee:transform doc:name="Set Response">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  correlationId: correlationId,
+  message: "Sucessfully created",
+  statusCode: 201,
+  payload: payload
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="INFO: END" doc:id="aea717c7-8df3-46bd-a505-2ff3807f3ce3" config-ref="json-logger-config-display-content" message="End of post items sub flow" tracePoint="END"/>
+        
+</sub-flow>
+</mule>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="post-items-test-suite.xml" />
+	<munit:test name="post-items-test-suite" doc:id="002a4729-fb6b-4a31-813e-f67892cf96ba" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock: Salesforce Create Items" doc:id="66435cce-cf44-4784-9b68-024c6d2df768" processor="salesforce:create">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="60dc16fa-fe27-4774-9b64-b87dbb96daf0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json&#10;---&#10;readUrl('classpath://postItems/mockWhenResponse.dwl')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Input Payload" doc:id="a718fe7a-439c-44e4-8f90-17e29c6d66f0">
+				<munit:payload value="#[readUrl('classpath://postItems/setEventPayload.dwl')]" />
+				<munit:attributes value='#[{&#10;	client_id: "12345",&#10;	client_secret: "eth"&#10;}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-items-sub-flow" doc:id="6e06bbe1-b6ae-4a59-9199-2dffbe6b9f3b" name="post:\items:application\json:ag-micorp-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="End Logger" doc:id="25d6fe0d-2d03-439a-a833-c2a207173900" processor="json-logger:logger" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="aea717c7-8df3-46bd-a505-2ff3807f3ce3" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="aea717c7-8df3-46bd-a505-2ff3807f3ce3" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="aea717c7-8df3-46bd-a505-2ff3807f3ce3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

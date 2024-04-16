@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ag-micorp-sys-api-test-suite.xml" />
+	<munit:test name="ag-micorp-sys-api-test-suite-ag-micorp-sys-api-mainTest" doc:id="780443ff-5bce-4fc7-a63d-f953c8406d32" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock: Router" doc:id="cfde7047-d9a2-41d7-8106-65662afe1037" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ag-micorp-sys-api-main" doc:id="b0ab3abd-9082-410e-9d94-0b7e81bd4c50" name="ag-micorp-sys-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify Router Call" doc:id="d821bf3d-eee7-4965-8a9f-65e947fb3d07" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ag-micorp-sys-api-test-suite-BAD-REQUEST" doc:id="5076459b-a634-4bd9-bdd8-582c83f6fa87" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock: Router" doc:id="7a1100e9-2029-443f-8e14-4f45a330fbd6" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="ag-micorp-sys-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ag-micorp-sys-api-main" doc:id="7c35c5b3-37f7-4ff1-8bc7-aacedd467cee" name="ag-micorp-sys-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="End Logger" doc:id="4e4ecaa0-10eb-47d5-834e-b61a8cf0685d" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="da83c60b-28d2-4fa6-99b3-51558228707e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

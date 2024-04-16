@@ -1,0 +1,14 @@
+%dw 2.0
+
+type auto_14755480_5253_4342_86be_5d762a076e02_Input_Payload = {
+  signatureRequiredFlag: Boolean, 
+  shipInstructions: String, 
+  giftWrapMessage: String, 
+  subTotal: Number, 
+  giftWrapFlag: Boolean, 
+  poNumber: String, 
+  currencyCode: String, 
+  email: String, 
+  _?: Any
+}
+

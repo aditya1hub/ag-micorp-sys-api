@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="health-check-sub-flow" doc:id="06558d34-f00f-4edf-91b9-055987ac797b" >
+		<json-logger:logger doc:name="INFO: START" doc:id="ff49c9a3-1c55-4516-b37a-75e011aef96c" message="Start of health check sub flow" config-ref="json-logger-config"/>
+		<ee:transform doc:name="Set Response" doc:id="a1cdd971-32b2-4b18-9374-3fedcea94942" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "MiCorp API is working!",
+  timeStamp: now()
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="INFO: END" doc:id="a37f6df0-a19e-42b8-84ff-42600e811328" config-ref="json-logger-config" message="End of health check sub flow" tracePoint="END"/>
+	</sub-flow>
+</mule>

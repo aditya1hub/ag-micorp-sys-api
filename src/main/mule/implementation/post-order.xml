@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="post-order-sub-flow" doc:id="14755480-5253-4342-86be-5d762a076e02" >
+		<json-logger:logger doc:name="INFO: START" doc:id="a3a5ab64-7390-4d1f-8431-401cd6d10769" config-ref="json-logger-config-display-content" message="Start of post order sub flow"/>
+		<ee:transform doc:name="Set Payload" doc:id="4f430892-8fc8-4037-8fc8-f33465e72e54">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	customerId__c: payload.customerId,
+	Name: "Order" ++ " " ++ payload.poNumber as Number,
+	poNumber__c: payload.poNumber as Number,
+	signatureRequiredFlag__c: payload.signatureRequiredFlag,
+	shipInstructions__c: payload.shipInstructions,
+	giftWrapFlag__c: payload.giftWrapFlag,
+	giftWrapMessage__c: payload.giftWrapMessage,
+	currencyCode__c: payload.currencyCode,
+	subTotal__c: payload.subTotal
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="order" doc:id="3e6b02fe-e3ab-4daf-8c02-a5bce91c538b" config-ref="salesforce-config" type="Orders__c"/>
+		<ee:transform doc:name="Set Response">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  correlationId: correlationId,
+  message: "Sucessfully created",
+  statusCode: 201,
+  payload: payload
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="INFO: END" doc:id="0944a1ea-cb81-41a7-8cab-7e33b13f490a" config-ref="json-logger-config-display-content" message="End of post order sub flow" tracePoint="END"/>
+        
+</sub-flow>
+</mule>

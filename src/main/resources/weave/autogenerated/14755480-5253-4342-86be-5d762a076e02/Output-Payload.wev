@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_14755480_5253_4342_86be_5d762a076e02_Output_Payload = {
+  correlationId: String, 
+  message: String, 
+  statusCode: Number, 
+  _?: Any
+}
+

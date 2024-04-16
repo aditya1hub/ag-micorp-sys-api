@@ -1,0 +1,36 @@
+# Dev Configurations
+
+# Auto Discovery
+api:
+  id: "19406173"
+  name: ${project.name}
+  version: ${project.version}
+
+# Listener Configuration
+
+http:
+  port: "8081"
+  host: "0.0.0.0" 
+  listener:
+    basePath: "/micorp-sys-api/v1/*"
+  connectionIdleTimeout: "60000"
+  reconnection:
+    frequency: "2000"
+    attempts: "5" 
+  
+# Salesforce Configurations
+  
+salesforce:
+  reconnection:
+    frequency: "2000"
+    attempts: "5" 
+    
+# JSON Logger Configurations
+
+json:
+  logger:
+    application:
+      name: ${project.name}
+      version: ${project.version}
+      disabledFields: "content"
+      maskedFields: "client_id,client_secret"

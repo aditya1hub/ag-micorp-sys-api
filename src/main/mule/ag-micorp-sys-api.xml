@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <flow name="ag-micorp-sys-api-main">
+        <http:listener config-ref="ag-micorp-sys-api-http-listener-config" path="${http.listener.basePath}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<ee:transform doc:name="vars: correlationId" doc:id="f0d1ecfd-48f9-4f03-b4c8-62754527e6ba" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="correlationId" ><![CDATA[attributes.headers.'x-correlation-id' default uuid()]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<apikit:router config-ref="ag-micorp-sys-api-config" />
+    </flow>
+    <flow name="get:\healthCheck:ag-micorp-sys-api-config" doc:id="716e51f4-c97b-41cb-934c-43abce0948b5">
+        <flow-ref doc:name="health-check-sub-flow" doc:id="4e61b160-69f6-42a8-b9c4-94e001f78aaf" name="health-check-sub-flow" />
+    </flow>
+
+    <flow name="get:\customers\(email):ag-micorp-sys-api-config" doc:id="a33dffee-c533-4e76-a38b-d0dd00713ab6">
+        <flow-ref doc:name="get-customer-by-email-sub-flow" doc:id="4868d29c-3e8b-4541-859b-57f4ed571a53" name="get-customer-by-email-sub-flow" />
+    </flow>
+
+    <flow name="post:\customers:application\json:ag-micorp-sys-api-config" doc:id="2c4e6164-857b-41e9-9a38-b2d5acdfe02b">
+        <flow-ref doc:name="post-customer-sub-flow" doc:id="136e1302-df6a-4cac-9799-77b0a49398b7" name="post-customer-sub-flow" />
+    </flow>
+    <flow name="post:\items:application\json:ag-micorp-sys-api-config" doc:id="9b48d3d3-3e3f-49c7-821c-7408d96c7897">
+        <flow-ref doc:name="post-items-sub-flow" doc:id="1b45c586-1b61-4e19-a6ab-65fbd62a4d2d" name="post-items-sub-flow" />
+    </flow>
+    <flow name="post:\orders:application\json:ag-micorp-sys-api-config" doc:id="454a3238-f8a3-4a2a-8d2a-621bd5837d45">
+        <flow-ref doc:name="post-order-sub-flow" doc:id="38b050b5-5ab5-4f5c-8c2b-7c569e5328af" name="post-order-sub-flow" />
+    </flow>
+    <flow name="get:\orders\(poNumber):ag-micorp-sys-api-config" doc:id="2e58c657-679f-41f1-9554-4874d1380ea0">
+		<flow-ref doc:name="get-order-by-poNumber-sub-flow" doc:id="2a206cef-f3fa-4ae7-9ddf-1a59e4a9eea1" name="get-order-by-poNumber-sub-flow"/>
+        
+    </flow>
+</mule>

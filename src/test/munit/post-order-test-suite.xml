@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="post-order-test-suite.xml" />
+	<munit:test name="post-order-test-suite-post-order-sub-flowTest" doc:id="ce33d676-a119-4dda-8fad-fda45a8ff0d0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock: Salesforce Create Order" doc:id="0a559697-ba78-429e-a02d-41ba4e77c311" processor="salesforce:create">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3e6b02fe-e3ab-4daf-8c02-a5bce91c538b" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="3e6b02fe-e3ab-4daf-8c02-a5bce91c538b" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="3e6b02fe-e3ab-4daf-8c02-a5bce91c538b" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="3e6b02fe-e3ab-4daf-8c02-a5bce91c538b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[readUrl("classpath://postOrder/mockWhenResponse.dwl")]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Input Payload" doc:id="234ac71f-164e-4e63-87e3-3801d897250f" >
+				<munit:payload value='#[readUrl("classpath://postOrder/setEventPayload.dwl")]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-order-sub-flow" doc:id="f0e6865f-ee30-425e-bd3a-fc8418c5f6bc" name="post:\orders:application\json:ag-micorp-sys-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="End Logger" doc:id="d2e01dd9-cc95-47a4-9f60-6ac5d7cb9b33" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0944a1ea-cb81-41a7-8cab-7e33b13f490a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
